@@ -14,7 +14,7 @@ def preprocessing() :
 #         Step 1 would be replace with sampling and renormalizing the output from the generator
     
     absolute_path = "/Users/esmeraldamontas/Documents/Senior Year/Spring Semster/CSCI 1430/stylegan-detector/data/"
-
+    # absolute_path = str(os.cwd())
     real_files = os.listdir(absolute_path + "/train/real")
     fake_files = os.listdir(absolute_path + "/train/fake")
     
@@ -30,11 +30,11 @@ def preprocessing() :
     for fp in fake_files :
         filepath = fp.split(".")
         im = Image.open(absolute_path + "/train/fake/" + fp)
-        # im = np.array(im)
-        # im = np.clip(np.rint((im + 1.0) / 2.0 * 255.0), 0.0,
-        #                  255.0).astype(np.uint8) # [-1,1] => [0,255]
-        # # im = np.transpose(im, (0, 2, 3, 1)) # NCHW => NHWC
-        # im = Image.fromarray(im, 'RGB')
+        im = np.array(im)
+        im = np.clip(np.rint((im + 1.0) / 2.0 * 255.0), 0.0,
+                         255.0).astype(np.uint8) # [-1,1] => [0,255]
+        im = np.transpose(im,(0, 2, 3, 1)) # NCHW => NHWC
+        im = Image.fromarray(im, 'RGB')
         im = im.resize((128,128), Image.LANCZOS)
         png_path = absolute_path + "/train/preprocess/fake/" + filepath[0] + ".png"
         im.save(png_path)
