@@ -65,11 +65,6 @@ def preprocessing() :
     for fp in tqdm(train_fake_files, total=len(train_fake_files)):
         filepath = fp.split(".")
         im = Image.open(train_fake_path + "/{}".format(fp))
-        im = np.array(im)
-        im = np.clip(np.rint((im + 1.0) / 2.0 * 255.0), 0.0,
-                         255.0).astype(np.uint8) # [-1,1] => [0,255]
-        im = np.transpose(im,(0, 2, 3, 1)) # NCHW => NHWC
-        im = Image.fromarray(im, 'RGB')
         im = im.resize((128,128), Image.LANCZOS)
         png_path = train_fake_preprocess_path + "/{}.png".format(filepath[0])
         im.save(png_path)
