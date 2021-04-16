@@ -19,6 +19,6 @@ We used the following:
 
 The data is not pushed onto the repository. In order to replicate our code, do the following:
 
-1. Follow the link to the aforementioned dataset, and unzip them to `data/fakefaces`
+1. Follow the link to the aforementioned dataset, and unzip them to `data` such that the folders `train`, `test`, and `valid` are in `data` (e.g. `/data/train`, `/data/test`, `data/valid`)
 
 ### Data
