@@ -46,6 +46,7 @@ def preprocessing() :
     
     absolute_path = str(os.getcwd()) + "/../data/"
     train_real_path, train_fake_path = absolute_path + "/train/real", absolute_path + "/train/fake"
+    train_preprocess_path = absolute_path + "/train/preprocess"
     train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
                                                                 train_preprocess_path + "/fake"
 
