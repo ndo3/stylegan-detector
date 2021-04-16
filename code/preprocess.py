@@ -2,6 +2,7 @@ import numpy as np
 import os, sys
 import cv2
 from PIL import Image
+from tqdm import tqdm
     
 def check_paths():
     ######################### assert that the paths are there #########################
@@ -54,14 +55,14 @@ def preprocessing() :
     train_fake_files = os.listdir(train_fake_path)
     
     # dealing with real files
-    for fp in train_real_files :
+    for fp in tqdm(train_real_files, total=len(train_real_files)):
         filepath = fp.split(".")
         im = Image.open(train_real_path + "/{}".format(fp))
         im = im.resize((128, 128), Image.LANCZOS)
         png_path = train_real_preprocess_path + "/{}.png".format(filepath[0])
         im.save(png_path)
     
-    for fp in fake_files :
+    for fp in tqdm(train_fake_files, total=len(train_fake_files)):
         filepath = fp.split(".")
         im = Image.open(train_fake_path + "/{}".format(fp))
         im = np.array(im)
