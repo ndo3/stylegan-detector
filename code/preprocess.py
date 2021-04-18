@@ -4,21 +4,21 @@ import cv2
 from PIL import Image
 from tqdm import tqdm
     
-def check_paths():
+def check_paths(parent_path):
     ######################### assert that the paths are there #########################
-    absolute_path = str(os.getcwd()) + "/../data/"
+    absolute_path = str(os.getcwd()) + '/' + parent_path
     train_real_path, train_fake_path = absolute_path + "/train/real", absolute_path + "/train/fake"
     test_real_path, test_fake_path = absolute_path + "/test/real", absolute_path + "/test/fake"
     valid_real_path, valid_fake_path = absolute_path + "/valid/real", absolute_path + "/valid/fake"
 
     if (not os.path.exists(train_real_path)) or (not os.path.exists(train_fake_path)):
-        raise NotImplementedError("Please make sure that /data/train/real and /data/train/fake exists")
+        raise NotImplementedError(f'Please make sure that /{parent_path}/train/real and /{parent_path}/train/fake exist')
 
     if (not os.path.exists(test_real_path)) or (not os.path.exists(test_fake_path)):
-        raise NotImplementedError("Please make sure that /data/test/real and /data/test/fake exists")
+        raise NotImplementedError(f'Please make sure that /{parent_path}/test/real and /{parent_path}/test/fake exist')
 
     if (not os.path.exists(valid_real_path)) or (not os.path.exists(valid_fake_path)):
-        raise NotImplementedError("Please make sure that /data/valid/real and /data/valid/fake exists")
+        raise NotImplementedError(f'Please make sure that /{parent_path}/valid/real and /{parent_path}/valid/fake exist')
 
     # alright. now create folders to put preprocessed files if they are not there already
     train_preprocess_path = absolute_path + "/train/preprocess"
@@ -35,7 +35,7 @@ def check_paths():
         os.mkdir(train_fake_preprocess_path, mode=0o775)
     
 
-def preprocessing() :
+def preprocessing(parent_path):
     #    In order to minimize differences between the real and fake images and reduce
     #    artificats that could impact accurary the following steps are need (Chai et al, pg 22):
     #    Real Images:
@@ -45,7 +45,7 @@ def preprocessing() :
     #     Fake Images
     #         Step 1 would be replace with sampling and renormalizing the output from the generator
     
-    absolute_path = str(os.getcwd()) + "/../data/"
+    absolute_path = str(os.getcwd()) + '/' + parent_path
     train_real_path, train_fake_path = absolute_path + "/train/real", absolute_path + "/train/fake"
     train_preprocess_path = absolute_path + "/train/preprocess"
     train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
