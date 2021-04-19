@@ -38,7 +38,7 @@ def load_imgs(path):
         # changed this part for concurrency memory issue
         temp = Image.open(f'{path}/{fp}')
         keep = temp.copy()
-        imgs.append(keep)
+        imgs.append(np.array(keep))
         temp.close()
     return np.array(imgs)
 
