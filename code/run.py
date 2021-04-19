@@ -6,6 +6,7 @@ import numpy as np
 
 from model import create_model
 from preprocess import check_paths, preprocessing
+from PIL import Image
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -50,9 +51,13 @@ def main():
     if args.preprocess:
         check_paths(args.data_path)
         preprocessing(args.data_path)
-    data = {t: load_data(t, data_path) for t in ['train', 'valid', 'test']}
+    data = {t: load_data(t, args.data_path) for t in ['train', 'valid', 'test']}
     model = create_model(args.truncate_block_num)
     optimizer = tf.keras.optimizers.SGD(learning_rate=0.045, momentum=0.9)
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
     model.fit(data['train']['data'], data['train']['labels'])  # also batch_size and epochs
     print(model.evaluate(data['test']['data'], data['test']['labels']))
+
+
+if __name__ == "__main__":
+    main()
