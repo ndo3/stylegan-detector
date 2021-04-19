@@ -35,7 +35,11 @@ def load_imgs(path):
     files = listdir(path)
     imgs = []
     for fp in tqdm(files, total=len(files)):
-        imgs.append(Image.open(f'{path}/{fp}'))
+        # changed this part for concurrency memory issue
+        temp = Image.open(f'{path}/{fp}')
+        keep = temp.copy()
+        imgs.append(keep)
+        temp.close()
     return np.array(imgs)
 
 def load_data(data_type, data_path):
