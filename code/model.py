@@ -111,6 +111,11 @@ def create_model(truncate_block_num):
         layers.Dense(2, activation='softmax', name='block13_dense')
     ]
 
+    blocks['trunc'] = [
+        layers.Flatten(),
+        layers.Dense(2, activation='sigmoid', name='truncated_end_dense')
+    ]
+
     # run
     x = inputs
     for i in range(truncate_block_num + 1 if is_trunc else 14):
@@ -124,7 +129,7 @@ def create_model(truncate_block_num):
         else:  # i is in range(4, 12)
             for l in blocks[i]: x = l(x)
     if is_trunc:
-        x = Conv2D(filtersTODO, (1,1), name='truncated_end_conv')
+        for l in blocks['trunc']: x = l(x)
     predictions = x
 
     model = keras.models.Model(inputs=inputs, outputs=predictions)
