@@ -79,8 +79,11 @@ def create_model(truncate_block_num):
     """ 
 
     is_trunc = truncate_block_num != None
+    BATCH_SIZE = 420
     print("truncate_block_num input to create_model: ", truncate_block_num)
-    inputs = layers.Input(shape=(128,128,3))
+    inputs = layers.Input(shape=(128,128,3),\
+                            batch_size=BATCH_SIZE)
+    print("inputs shape: ", inputs.shape)
     blocks = {}
     residuals = {}
     
@@ -112,16 +115,19 @@ def create_model(truncate_block_num):
 
     # run
     x = inputs
+    print("x.shape: ", x.shape)
     for i in range(truncate_block_num + 1 if is_trunc else 14):
+        print(f"dealing with i = {i}")
         if i in [0, 13]:
             for l in blocks[i]: x = l(x)
-        if i in [1, 2, 3, 12]:
-            r = x
+        elif i in [1, 2, 3, 12]:
+            r = tf.identity(x)
             for l in residuals[i]: r = l(r)
             for l in blocks[i]: x = l(x)
             x = layers.add([x, r])
         else:  # i is in range(4, 12)
             for l in blocks[i]: x = l(x)
+        print(f"output x shaped after {i}: {x.shape}")
     if is_trunc:
         x = Conv2D(filtersTODO, (1,1), name='truncated_end_conv')
     predictions = x
