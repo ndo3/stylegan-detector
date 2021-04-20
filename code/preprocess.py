@@ -69,10 +69,6 @@ def preprocessing(parent_path):
         png_path = train_fake_preprocess_path + "/{}.png".format(filepath[0])
         im.save(png_path)
     
-    
-if __name__ == '__main__':
-    check_paths()
-    preprocessing()
 
 
 
