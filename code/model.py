@@ -33,7 +33,7 @@ def create_act(num, subnum, is_separable):
 def create_conv_or_sepconv(is_separable, is_residual, num, subnum, filters, kernel_size, strides, act):
     name = f'residual{num}' if is_residual else make_block_name(num, subnum, is_separable)
     conv_layer = layers.SeparableConv2D if is_separable else layers.Conv2D
-    channel_axis = 1 if backend.image_data_format() == 'channels_first' else -1
+    channel_axis = 1 if keras.backend.image_data_format() == 'channels_first' else -1
     ret = [
         conv_layer(filters, kernel_size, strides=strides, name=name),
         layers.BatchNormalization(axis=channel_axis, name=f'{name}_bn')
@@ -79,8 +79,8 @@ def create_model(truncate_block_num):
     """ 
 
     is_trunc = truncate_block_num != None
-
-    inputs = Input(shape=(TODO))
+    print("truncate_block_num input to create_model: ", truncate_block_num)
+    inputs = layers.Input(shape=(128,128,3))
     blocks = {}
     residuals = {}
     
@@ -106,7 +106,7 @@ def create_model(truncate_block_num):
     blocks[13] = [
         *create_sepconv(13, 0, 1536, act='after'),
         *create_sepconv(13, 1, 2048, act='after'),
-        layers.GloablAveragePooling2D(name='block13_globalpool'),
+        layers.GlobalAveragePooling2D(name='block13_globalpool'),
         layers.Dense(2, activation='softmax', name='block13_dense')
     ]
 

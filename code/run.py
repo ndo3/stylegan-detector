@@ -48,11 +48,7 @@ def load_imgs(path):
 
 def load_data(data_type, data_path):
     # added if condition because so far we're only preprocessing train
-    if data_type == "train":
-        train_path = f'{data_path}/{data_type}/preprocess/'
-    else:
-        # for the rest we can just apply things directly i believe? i might be wrong tho LETS FIND OUT
-        train_path = f'{data_path}/{data_type}/'
+    train_path = f'{data_path}/{data_type}/preprocess/'
     (reals, fakes) = [load_imgs(train_path + t) for t in ['real', 'fake']]
     print("reals.shape: ", reals.shape)
     print("fakes.shape: ", fakes.shape)
