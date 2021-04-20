@@ -51,25 +51,30 @@ def preprocessing(parent_path):
     train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
                                                                 train_preprocess_path + "/fake"
 
-    train_real_files = os.listdir(train_real_path)
-    train_fake_files = os.listdir(train_fake_path)
-    
-    # dealing with real files
-    for fp in tqdm(train_real_files, total=len(train_real_files)):
-        filepath = fp.split(".")
-        im = Image.open(train_real_path + "/{}".format(fp))
-        im = im.resize((128, 128), Image.LANCZOS)
-        png_path = train_real_preprocess_path + "/{}.png".format(filepath[0])
-        im.save(png_path)
-    
-    for fp in tqdm(train_fake_files, total=len(train_fake_files)):
-        filepath = fp.split(".")
-        im = Image.open(train_fake_path + "/{}".format(fp))
-        im = im.resize((128,128), Image.LANCZOS)
-        png_path = train_fake_preprocess_path + "/{}.png".format(filepath[0])
-        im.save(png_path)
-    
 
+    train_real_files, train_fake_files = os.listdir(train_real_path), os.listdir(train_fake_path)
+    train_real_preprocess_files, train_fake_preprocess_files = os.listdir(train_real_preprocess_path),\
+                                                                 os.listdir(train_fake_preprocess_path)
+
+    MARGIN_OF_ERROR_IN_NUM_FILES = 10 # real bad engineering practice but im just tryna graduate
+    
+    if abs(len(train_real_files) - len(train_real_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
+        # dealing with real files
+        for fp in tqdm(train_real_files, total=len(train_real_files)):
+            filepath = fp.split(".")
+            im = Image.open(train_real_path + "/{}".format(fp))
+            im = im.resize((128, 128), Image.LANCZOS)
+            png_path = train_real_preprocess_path + "/{}.png".format(filepath[0])
+            im.save(png_path)
+
+    if abs(len(train_fake_files) - len(train_fake_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
+        # dealing with fake files
+        for fp in tqdm(train_fake_files, total=len(train_fake_files)):
+            filepath = fp.split(".")
+            im = Image.open(train_fake_path + "/{}".format(fp))
+            im = im.resize((128,128), Image.LANCZOS)
+            png_path = train_fake_preprocess_path + "/{}.png".format(filepath[0])
+            im.save(png_path)
 
 
     

@@ -22,8 +22,9 @@ from tensorflow.keras import layers
 #  - do chai et al use the additional (non-sequential) aspects of the xception model
 
 def make_block_name(num, subnum, is_separable):
-    type_string = 'sepconv' if is_separable else 'conv'
-    return f'block{num}_{type_string}{subnum}'
+    if is_separable: mid_val = 'sepconv'
+    else: mid_val = 'conv'
+    return f'block{num}_{mid_val}{subnum}'
 
 def create_act(num, subnum, is_separable):
     name = f'{make_block_name(num, subnum, is_separable)}_act'
