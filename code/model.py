@@ -79,8 +79,8 @@ def create_model(truncate_block_num):
     """ 
 
     is_trunc = truncate_block_num != None
-
-    inputs = Input(shape=(TODO))
+    print("truncate_block_num input to create_model: ", truncate_block_num)
+    inputs = layers.Input(shape=(128,128,3))
     blocks = {}
     residuals = {}
     
