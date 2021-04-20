@@ -7,32 +7,25 @@ from tqdm import tqdm
 def check_paths(parent_path):
     ######################### assert that the paths are there #########################
     absolute_path = str(os.getcwd()) + '/' + parent_path
-    train_real_path, train_fake_path = absolute_path + "/train/real", absolute_path + "/train/fake"
-    test_real_path, test_fake_path = absolute_path + "/test/real", absolute_path + "/test/fake"
-    valid_real_path, valid_fake_path = absolute_path + "/valid/real", absolute_path + "/valid/fake"
+    for path_type in ["train", "test", "valid"]:
+        real_path, fake_path = absolute_path + f"/{path_type}/real", absolute_path + f"/{path_type}/fake"
 
-    if (not os.path.exists(train_real_path)) or (not os.path.exists(train_fake_path)):
-        raise NotImplementedError(f'Please make sure that /{parent_path}/train/real and /{parent_path}/train/fake exist')
+        if (not os.path.exists(real_path)) or (not os.path.exists(fake_path)):
+            raise NotImplementedError(f'Please make sure that /{parent_path}/train/real and /{parent_path}/{path_type}/fake exist')
 
-    if (not os.path.exists(test_real_path)) or (not os.path.exists(test_fake_path)):
-        raise NotImplementedError(f'Please make sure that /{parent_path}/test/real and /{parent_path}/test/fake exist')
+    # # alright. now create folders to put preprocessed files if they are not there already
+    # train_preprocess_path = absolute_path + "/train/preprocess"
+    # if not os.path.exists(train_preprocess_path):
+    #     os.mkdir(train_preprocess_path, mode=0o775)
 
-    if (not os.path.exists(valid_real_path)) or (not os.path.exists(valid_fake_path)):
-        raise NotImplementedError(f'Please make sure that /{parent_path}/valid/real and /{parent_path}/valid/fake exist')
-
-    # alright. now create folders to put preprocessed files if they are not there already
-    train_preprocess_path = absolute_path + "/train/preprocess"
-    if not os.path.exists(train_preprocess_path):
-        os.mkdir(train_preprocess_path, mode=0o775)
-
-    train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
-                                                                train_preprocess_path + "/fake"
+    # train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
+    #                                                             train_preprocess_path + "/fake"
     
-    if not os.path.exists(train_real_preprocess_path):
-        os.mkdir(train_real_preprocess_path, mode=0o775)
+    # if not os.path.exists(train_real_preprocess_path):
+    #     os.mkdir(train_real_preprocess_path, mode=0o775)
 
-    if not os.path.exists(train_fake_preprocess_path):
-        os.mkdir(train_fake_preprocess_path, mode=0o775)
+    # if not os.path.exists(train_fake_preprocess_path):
+    #     os.mkdir(train_fake_preprocess_path, mode=0o775)
     
 
 def preprocessing(parent_path):

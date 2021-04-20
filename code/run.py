@@ -35,15 +35,12 @@ def parse_args():
 def load_imgs(path):
     files = listdir(path)
     imgs = []
-    count = 0
     for fp in tqdm(files, total=len(files)):
         # changed this part for concurrency memory issue
         temp = Image.open(f'{path}/{fp}')
         keep = temp.copy()
         imgs.append(np.array(keep))
         temp.close()
-        count += 1
-        if count == 50: break
     return np.array(imgs)
 
 def load_data(data_type, data_path):
