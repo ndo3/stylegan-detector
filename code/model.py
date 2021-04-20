@@ -35,7 +35,7 @@ def create_conv_or_sepconv(is_separable, is_residual, num, subnum, filters, kern
     conv_layer = layers.SeparableConv2D if is_separable else layers.Conv2D
     channel_axis = 1 if keras.backend.image_data_format() == 'channels_first' else -1
     ret = [
-        conv_layer(filters, kernel_size, strides=strides, name=name),
+        conv_layer(filters, kernel_size, strides=strides, padding='same', name=name),
         layers.BatchNormalization(axis=channel_axis, name=f'{name}_bn')
     ]
     if act == 'before':
@@ -55,7 +55,7 @@ def create_sepconv(num, subnum, filters, act='before'):
     return create_conv_or_sepconv(True, False, num, subnum, filters, (3,3), (1,1), act)
 
 def create_maxpool(num):
-    return layers.MaxPooling2D((3, 3), strides=(2, 2), padding='same', name=f'block{num}_pool')
+    return layers.MaxPooling2D(pool_size=(3, 3), strides=(2, 2), padding='same', name=f'block{num}_pool')
 
 def create_entry_block(num, filters, start_with_act=True):
     return [
@@ -80,10 +80,8 @@ def create_model(truncate_block_num):
 
     is_trunc = truncate_block_num != None
     BATCH_SIZE = 420
-    print("truncate_block_num input to create_model: ", truncate_block_num)
     inputs = layers.Input(shape=(128,128,3),\
                             batch_size=BATCH_SIZE)
-    print("inputs shape: ", inputs.shape)
     blocks = {}
     residuals = {}
     
@@ -115,9 +113,7 @@ def create_model(truncate_block_num):
 
     # run
     x = inputs
-    print("x.shape: ", x.shape)
     for i in range(truncate_block_num + 1 if is_trunc else 14):
-        print(f"dealing with i = {i}")
         if i in [0, 13]:
             for l in blocks[i]: x = l(x)
         elif i in [1, 2, 3, 12]:
@@ -127,7 +123,6 @@ def create_model(truncate_block_num):
             x = layers.add([x, r])
         else:  # i is in range(4, 12)
             for l in blocks[i]: x = l(x)
-        print(f"output x shaped after {i}: {x.shape}")
     if is_trunc:
         x = Conv2D(filtersTODO, (1,1), name='truncated_end_conv')
     predictions = x

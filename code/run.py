@@ -3,6 +3,7 @@ import argparse
 from os import listdir
 from tqdm import tqdm
 import numpy as np
+from tensorflow.keras.utils import to_categorical
 
 from model import create_model
 from preprocess import check_paths, preprocessing
@@ -46,11 +47,9 @@ def load_data(data_type, data_path):
     # added if condition because so far we're only preprocessing train
     train_path = f'{data_path}/{data_type}/preprocess/'
     (reals, fakes) = [load_imgs(train_path + t) for t in ['real', 'fake']]
-    print("reals.shape: ", reals.shape)
-    print("fakes.shape: ", fakes.shape)
     return {
-        'data': np.stack([reals, fakes], axis=0),
-        'labels': np.stack([np.ones((reals.shape[0])), np.zeros((fakes.shape[0]))])
+        'data': np.vstack([reals, fakes]),
+        'labels': to_categorical(np.hstack([np.ones((reals.shape[0])), np.zeros((fakes.shape[0]))]))
     }
 
 def main():
