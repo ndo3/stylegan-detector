@@ -66,7 +66,7 @@ def main():
     model = create_model(args.truncate_block_num)
     optimizer = tf.keras.optimizers.SGD(learning_rate=0.045, momentum=0.9)
     model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    model.fit(data['train']['data'], data['train']['labels'], batch_size=1000)  # also batch_size and epochs
+    model.fit(data['train']['data'], data['train']['labels'], batch_size=hp.batch_size, num_epochs = 4)  # also batch_size and epochs
     print(model.evaluate(data['test']['data'], data['test']['labels']))
 
 
