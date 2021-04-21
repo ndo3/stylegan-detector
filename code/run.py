@@ -33,13 +33,17 @@ def parse_args():
 
     return parser.parse_args()
 
-def load_imgs(path):
+def load_imgs(path, expected_img_dim=(299,299,3)):
     files = listdir(path)
     imgs = []
     for fp in tqdm(files, total=len(files)):
         # changed this part for concurrency memory issue
         temp = Image.open(f'{path}/{fp}')
-        keep = temp.copy()
+        keep = np.array(temp.copy())
+        if keep.shape != expected_img_dim:
+            print("mismatch in image dimension; skipping")
+            print(f">>> saw: {keep.shape}, expect: {expected_img_dim}")
+            continue
         imgs.append(np.array(keep))
         temp.close()
     return np.array(imgs)
