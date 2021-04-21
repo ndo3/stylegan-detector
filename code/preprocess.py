@@ -13,19 +13,6 @@ def check_paths(parent_path):
         if (not os.path.exists(real_path)) or (not os.path.exists(fake_path)):
             raise NotImplementedError(f'Please make sure that /{parent_path}/train/real and /{parent_path}/{path_type}/fake exist')
 
-    # # alright. now create folders to put preprocessed files if they are not there already
-    # train_preprocess_path = absolute_path + "/train/preprocess"
-    # if not os.path.exists(train_preprocess_path):
-    #     os.mkdir(train_preprocess_path, mode=0o775)
-
-    # train_real_preprocess_path, train_fake_preprocess_path = train_preprocess_path + "/real", \
-    #                                                             train_preprocess_path + "/fake"
-    
-    # if not os.path.exists(train_real_preprocess_path):
-    #     os.mkdir(train_real_preprocess_path, mode=0o775)
-
-    # if not os.path.exists(train_fake_preprocess_path):
-    #     os.mkdir(train_fake_preprocess_path, mode=0o775)
     
 
 def preprocessing(parent_path):
@@ -37,7 +24,6 @@ def preprocessing(parent_path):
     #         (3) Image would then be resize to classifiers native resolution, mean centering would then be performed
     #     Fake Images
     #         Step 1 would be replace with sampling and renormalizing the output from the generator
-    
     absolute_path = str(os.getcwd()) + '/' + parent_path
     MARGIN_OF_ERROR_IN_NUM_FILES = 10 # real bad engineering practice but im just tryna graduate
     for data_type in ["train", "test", "valid"]:
@@ -59,6 +45,18 @@ def preprocessing(parent_path):
         real_files, fake_files = os.listdir(real_path), os.listdir(fake_path)
         real_preprocess_files, fake_preprocess_files = os.listdir(real_preprocess_path),\
                                                                     os.listdir(fake_preprocess_path)
+        
+        correct_prefixes = [real_preprocess_path, fake_preprocess_path]
+        for i, filelist in enumerate([real_preprocess_files, fake_preprocess_files]):
+            for fp in tqdm(filelist, total=len(filelist)):
+                to_remove_filepath = correct_prefixes[i] + f"/{fp}"
+                os.remove(to_remove_filepath)
+
+        real_preprocess_files, fake_preprocess_files = os.listdir(real_preprocess_path),\
+                                                                    os.listdir(fake_preprocess_path)
+
+        assert len(real_preprocess_files) == 0
+        assert len(fake_preprocess_files) == 0
         
         if abs(len(real_files) - len(real_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
             # dealing with real files
