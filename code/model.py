@@ -79,7 +79,7 @@ def create_model(truncate_block_num):
     """ 
 
     is_trunc = truncate_block_num != None
-    inputs = layers.Input(shape=(128,128,3), batch_size = hp.BATCH_SIZE)
+    inputs = layers.Input(shape=(299,299,3), batch_size = hp.BATCH_SIZE)
     
     # xception = tf.keras.applications.xception.preprocess_input(inputs)
 
