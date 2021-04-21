@@ -78,60 +78,65 @@ def create_model(truncate_block_num):
         truncate_block_num (int): None if untruncated, else the block number to truncate after
     """ 
 
-    is_trunc = truncate_block_num != None
-    BATCH_SIZE = 32
+    # is_trunc = truncate_block_num != None
+    BATCH_SIZE = 420
     inputs = layers.Input(shape=(128,128,3),\
                             batch_size=BATCH_SIZE)
-    blocks = {}
-    residuals = {}
     
-    blocks[0] = [
-        *create_conv(0, 0, 32, (3,3), (2,2)),
-        *create_conv(0, 1, 64, (3,3))
-    ]
-
-    for i, filters in zip([1, 2, 3], [128, 256, 728]):
-        residuals[i] = create_residual(i, filters)
-        blocks[i] = create_entry_block(i, filters, start_with_act=i!=1)
-
-    for i in range(4, 12):
-        blocks[i] = create_middle_block(i)
+    x = tf.keras.applications.xception.preprocess_input(inputs)
+    core = tf.keras.applications.Xception(input_shape = (128,128,3), weights = None, include_top = True, classes = 2)
+    x = core(x)
+    model = tf.keras.Model(inputs = [inputs], outputs = [x])
+    # blocks = {}
+    # residuals = {}
     
-    residuals[12] = create_residual(12, 1024)
-    blocks[12] = [
-        *create_sepconv(12, 0, 728),
-        *create_sepconv(12, 1, 1024),
-        create_maxpool(12)
-    ]
+    # blocks[0] = [
+    #     *create_conv(0, 0, 32, (3,3), (2,2)),
+    #     *create_conv(0, 1, 64, (3,3))
+    # ]
 
-    blocks[13] = [
-        *create_sepconv(13, 0, 1536, act='after'),
-        *create_sepconv(13, 1, 2048, act='after'),
-        layers.GlobalAveragePooling2D(name='block13_globalpool'),
-        layers.Dense(2, activation='softmax', name='block13_dense')
-    ]
+    # for i, filters in zip([1, 2, 3], [128, 256, 728]):
+    #     residuals[i] = create_residual(i, filters)
+    #     blocks[i] = create_entry_block(i, filters, start_with_act=i!=1)
 
-    blocks['trunc'] = [
-        layers.Flatten(),
-        layers.Dense(2, activation='sigmoid', name='truncated_end_dense')
-    ]
+    # for i in range(4, 12):
+    #     blocks[i] = create_middle_block(i)
+    
+    # residuals[12] = create_residual(12, 1024)
+    # blocks[12] = [
+    #     *create_sepconv(12, 0, 728),
+    #     *create_sepconv(12, 1, 1024),
+    #     create_maxpool(12)
+    # ]
+
+    # blocks[13] = [
+    #     *create_sepconv(13, 0, 1536, act='after'),
+    #     *create_sepconv(13, 1, 2048, act='after'),
+    #     layers.GlobalAveragePooling2D(name='block13_globalpool'),
+    #     layers.Dense(2, activation='softmax', name='block13_dense')
+    # ]
+
+    # blocks['trunc'] = [
+    #     layers.Flatten(),
+    #     layers.Dense(2, activation='sigmoid', name='truncated_end_dense')
+    # ]
 
     # run
-    x = inputs
-    for i in range(truncate_block_num + 1 if is_trunc else 14):
-        if i in [0, 13]:
-            for l in blocks[i]: x = l(x)
-        elif i in [1, 2, 3, 12]:
-            r = tf.identity(x)
-            for l in residuals[i]: r = l(r)
-            for l in blocks[i]: x = l(x)
-            x = layers.add([x, r])
-        else:  # i is in range(4, 12)
-            for l in blocks[i]: x = l(x)
-    if is_trunc:
-        for l in blocks['trunc']: x = l(x)
-    predictions = x
+    # x = inputs
+    # for i in range(truncate_block_num + 1 if is_trunc else 14):
+    #     if i in [0, 13]:
+    #         for l in blocks[i]: x = l(x)
+    #     elif i in [1, 2, 3, 12]:
+    #         r = tf.identity(x)
+    #         for l in residuals[i]: r = l(r)
+    #         for l in blocks[i]: x = l(x)
+    #         x = layers.add([x, r])
+    #     else:  # i is in range(4, 12)
+    #         for l in blocks[i]: x = l(x)
+    # if is_trunc:
+    #     for l in blocks['trunc']: x = l(x)
+    # predictions = x
 
-    model = keras.models.Model(inputs=inputs, outputs=predictions)
+    # model = keras.models.Model(inputs=inputs, outputs=predictions)
     
     return model
