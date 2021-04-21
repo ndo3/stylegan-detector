@@ -65,7 +65,7 @@ def preprocessing(parent_path):
             for fp in tqdm(real_files, total=len(real_files)):
                 filepath = fp.split(".")
                 im = Image.open(real_path + "/{}".format(fp))
-                im = im.resize((128, 128), Image.LANCZOS)
+                im = im.resize((224, 224), Image.LANCZOS)
                 png_path = real_preprocess_path + "/{}.png".format(filepath[0])
                 im.save(png_path)
 
@@ -74,6 +74,6 @@ def preprocessing(parent_path):
             for fp in tqdm(fake_files, total=len(fake_files)):
                 filepath = fp.split(".")
                 im = Image.open(fake_path + "/{}".format(fp))
-                im = im.resize((128,128), Image.LANCZOS)
+                im = im.resize((224,224), Image.LANCZOS)
                 png_path = fake_preprocess_path + "/{}.png".format(filepath[0])
                 im.save(png_path)

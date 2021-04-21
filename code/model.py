@@ -1,7 +1,6 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
-
 # notes from Julia:
 #  - haven't done docstrings yet so lmk if anything is confusing
 #  - haven't run the model yet so it is prob full of errors
@@ -79,14 +78,21 @@ def create_model(truncate_block_num):
     """ 
 
     # is_trunc = truncate_block_num != None
-    BATCH_SIZE = 420
-    inputs = layers.Input(shape=(128,128,3),\
-                            batch_size=BATCH_SIZE)
+    BATCH_SIZE = 1000
+    inputs = layers.Input(shape=(224,224,3), batch_size = BATCH_SIZE)
     
-    x = tf.keras.applications.xception.preprocess_input(inputs)
-    core = tf.keras.applications.Xception(input_shape = (128,128,3), weights = None, include_top = True, classes = 2)
-    x = core(x)
-    model = tf.keras.Model(inputs = [inputs], outputs = [x])
+    xception = tf.keras.applications.xception.preprocess_input(inputs)
+
+    xception = tf.keras.applications.Xception(
+            include_top = False, weights = 'imagenet')
+    model = tf.keras.models.Sequential([xception,
+                                        keras.layers.GlobalAveragePooling2D(),
+                                        keras.layers.Dense(512, activation='relu'),
+                                        keras.layers.BatchNormalization(),
+                                        keras.layers.Dropout(0.3),
+                                        keras.layers.Dense(1, activation='sigmoid')
+                                      ])
+    # model = tf.keras.Model(inputs = [inputs], outputs = [x])
     # blocks = {}
     # residuals = {}
     
