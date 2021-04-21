@@ -58,3 +58,5 @@ num_classes = 15
 "Input Shape"
 
 input_shape = (229,299)
+
+test_size = 100000

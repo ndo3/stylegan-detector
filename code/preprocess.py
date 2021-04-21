@@ -61,8 +61,8 @@ def preprocessing(parent_path):
         real_preprocess_files, fake_preprocess_files = os.listdir(real_preprocess_path),\
                                                                     os.listdir(fake_preprocess_path)
         ## FOR DEBUGGING PURPOSES NEED TO USE SMALLER DATASET
-        real_files = real_files[0:9999]
-        fake_files = fake_files[0:9999]
+        real_files = real_files[0:hp.test_size]
+        fake_files = fake_files[0:hp.test_size]
         if abs(len(real_files) - len(real_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
             # dealing with real files
             for fp in tqdm(real_files, total=len(real_files)):
