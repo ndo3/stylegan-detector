@@ -15,7 +15,7 @@ def check_paths(parent_path):
 
     
 
-def preprocessing(parent_path):
+def preprocessing(parent_path, percent_data):
     #    In order to minimize differences between the real and fake images and reduce
     #    artificats that could impact accurary the following steps are need (Chai et al, pg 22):
     #    Real Images:
@@ -57,7 +57,7 @@ def preprocessing(parent_path):
 
         assert len(real_preprocess_files) == 0
         assert len(fake_preprocess_files) == 0
-        
+
         if abs(len(real_files) - len(real_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
             # dealing with real files
             for fp in tqdm(real_files, total=len(real_files)):

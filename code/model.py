@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import hyperparameters as hp
 # notes from Julia:
 #  - haven't done docstrings yet so lmk if anything is confusing
 #  - haven't run the model yet so it is prob full of errors
@@ -77,9 +78,8 @@ def create_model(truncate_block_num):
         truncate_block_num (int): None if untruncated, else the block number to truncate after
     """ 
 
-    # is_trunc = truncate_block_num != None
-    BATCH_SIZE = 1000
-    inputs = layers.Input(shape=(128,128,3), batch_size = BATCH_SIZE)
+    is_trunc = truncate_block_num != None
+    inputs = layers.Input(shape=(128,128,3), batch_size = hp.BATCH_SIZE)
     
     # xception = tf.keras.applications.xception.preprocess_input(inputs)
 
@@ -124,6 +124,10 @@ def create_model(truncate_block_num):
 
     blocks['trunc'] = [
         layers.Flatten(),
+        layers.GlobalAveragePooling2D(),
+        layers.Dense(512, activation='relu'),
+        layers.BatchNormalization(),
+        layers.Dropout(0.3),
         layers.Dense(2, activation='sigmoid', name='truncated_end_dense')
     ]
 
