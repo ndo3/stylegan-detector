@@ -3,7 +3,8 @@ import os, sys
 import cv2
 from PIL import Image
 from tqdm import tqdm
-    
+import hyperparameters as hp
+
 def check_paths(parent_path):
     ######################### assert that the paths are there #########################
     absolute_path = str(os.getcwd()) + '/' + parent_path
@@ -59,13 +60,15 @@ def preprocessing(parent_path):
         real_files, fake_files = os.listdir(real_path), os.listdir(fake_path)
         real_preprocess_files, fake_preprocess_files = os.listdir(real_preprocess_path),\
                                                                     os.listdir(fake_preprocess_path)
-        
+        ## FOR DEBUGGING PURPOSES NEED TO USE SMALLER DATASET
+        real_files = real_files[0:9999]
+        fake_files = fake_files[0:9999]
         if abs(len(real_files) - len(real_preprocess_files)) > MARGIN_OF_ERROR_IN_NUM_FILES:
             # dealing with real files
             for fp in tqdm(real_files, total=len(real_files)):
                 filepath = fp.split(".")
                 im = Image.open(real_path + "/{}".format(fp))
-                im = im.resize((299, 299), Image.LANCZOS)
+                im = im.resize(hp.input_shape, Image.LANCZOS)
                 png_path = real_preprocess_path + "/{}.png".format(filepath[0])
                 im.save(png_path)
 
@@ -74,6 +77,6 @@ def preprocessing(parent_path):
             for fp in tqdm(fake_files, total=len(fake_files)):
                 filepath = fp.split(".")
                 im = Image.open(fake_path + "/{}".format(fp))
-                im = im.resize((299,299), Image.LANCZOS)
+                im = im.resize(hp.input_shape, Image.LANCZOS)
                 png_path = fake_preprocess_path + "/{}.png".format(filepath[0])
                 im.save(png_path)

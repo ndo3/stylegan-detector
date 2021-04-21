@@ -5,10 +5,11 @@ from os import listdir
 from tqdm import tqdm
 import numpy as np
 from tensorflow.keras.utils import to_categorical
-
+from keras.preprocess.image import ImageDataGenerator
 from model import create_model
 from preprocess import check_paths, preprocessing
 from PIL import Image
+import hyperparameters as hp
 
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -34,15 +35,21 @@ def parse_args():
     return parser.parse_args()
 
 def load_imgs(path):
-    files = listdir(path)
-    imgs = []
-    for fp in tqdm(files, total=len(files)):
-        # changed this part for concurrency memory issue
-        temp = Image.open(f'{path}/{fp}')
-        keep = temp.copy()
-        imgs.append(np.array(keep))
-        temp.close()
-    return np.array(imgs)
+    datagen = ImageDataGenerator(rescale=1./255)
+    dataset = datagen.flow_from_directory.flow_from_directory(path,
+                                                 class_mode='binary',
+                                                 shuffle=True,
+                                                 target_size=hp.input_shape,
+                                                 batch_size=hp.batch_size
+                                                )
+    # for fp in tqdm(files, total=len(files)):
+    #     # changed this part for concurrency memory issue
+    #     temp = Image.open(f'{path}/{fp}')
+    #     keep = temp.copy()
+    #     imgs.append(np.array(keep))
+    #     temp.close()
+    # return np.array(imgs)
+    return dataset
 
 def load_data(data_type, data_path):
     # added if condition because so far we're only preprocessing train
@@ -62,7 +69,7 @@ def main():
     model = create_model(args.truncate_block_num)
     optimizer = tf.keras.optimizers.SGD(learning_rate=0.045, momentum=0.9)
     model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    model.fit(data['train']['data'], data['train']['labels'], batch_size=1000)  # also batch_size and epochs
+    model.fit(data['train']['data'], data['train']['labels'], batch_size=hp.batch_size, num_epochs = 4)  # also batch_size and epochs
     print(model.evaluate(data['test']['data'], data['test']['labels']))
 
 

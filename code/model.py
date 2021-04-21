@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
+import hyperparameters as hp
 # notes from Julia:
 #  - haven't done docstrings yet so lmk if anything is confusing
 #  - haven't run the model yet so it is prob full of errors
@@ -78,8 +79,7 @@ def create_model(truncate_block_num):
     """ 
 
     # is_trunc = truncate_block_num != None
-    BATCH_SIZE = 1000
-    inputs = layers.Input(shape=(224,224,3), batch_size = BATCH_SIZE)
+    inputs = layers.Input(shape=(229,229,3), batch_size = hp.batch_size)
     
     xception = tf.keras.applications.xception.preprocess_input(inputs)
 
