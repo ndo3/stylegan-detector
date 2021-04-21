@@ -48,6 +48,7 @@ def load_imgs(path, percent_of_data, expected_img_dim=(299,299,3)):
     for fp in tqdm(files, total=len(files)):
         # changed this part for concurrency memory issue
         temp = Image.open(f'{path}/{fp}')
+        temp = temp.resize((299,299), Image.LANCZOS)
         keep = np.array(temp.copy())
         if keep.shape != expected_img_dim:
             print("mismatch in image dimension; skipping")
@@ -59,7 +60,7 @@ def load_imgs(path, percent_of_data, expected_img_dim=(299,299,3)):
 
 def load_data(data_type, data_path, percent_of_data):
     # added if condition because so far we're only preprocessing train
-    train_path = f'{data_path}/{data_type}/preprocess/'
+    train_path = f'{data_path}/{data_type}/'
     (reals, fakes) = [load_imgs(train_path + t, percent_of_data) for t in ['real', 'fake']]
     return {
         'data': np.vstack([reals, fakes]),
