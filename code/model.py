@@ -79,7 +79,7 @@ def create_model(truncate_block_num):
     """ 
 
     is_trunc = truncate_block_num != None
-    BATCH_SIZE = 420
+    BATCH_SIZE = 32
     inputs = layers.Input(shape=(128,128,3),\
                             batch_size=BATCH_SIZE)
     blocks = {}
