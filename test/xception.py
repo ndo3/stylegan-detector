@@ -84,7 +84,6 @@ checkpoint = ModelCheckpoint(filepath='spoffnet.h5',
                              save_best_only=True,
                              verbose=1,
                              mode='min',
-                             moniter='val_loss'
                             )
 reduce_lr = ReduceLROnPlateau(monitor='val_loss', 
                               factor=0.2, 
@@ -107,23 +106,23 @@ hist = spoofnet.fit(training_set,
                     epochs=4
                    )
 
-plt.figure(figsize=(14,5))
-plt.subplot(1,2,2)
-plt.plot(hist.history['accuracy'])
-plt.plot(hist.history['val_accuracy'])
-plt.title('Model Accuracy')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend(['train', 'val'])
+# plt.figure(figsize=(14,5))
+# plt.subplot(1,2,2)
+# plt.plot(hist.history['accuracy'])
+# plt.plot(hist.history['val_accuracy'])
+# plt.title('Model Accuracy')
+# plt.xlabel('Epochs')
+# plt.ylabel('Accuracy')
+# plt.legend(['train', 'val'])
 
-plt.subplot(1,2,1)
-plt.plot(hist.history['loss'])
-plt.plot(hist.history['val_loss'])
-plt.title('model Loss')
-plt.xlabel('Epochs')
-plt.ylabel('Loss')
-plt.legend(['train', 'val'])
-plt.show()
+# plt.subplot(1,2,1)
+# plt.plot(hist.history['loss'])
+# plt.plot(hist.history['val_loss'])
+# plt.title('model Loss')
+# plt.xlabel('Epochs')
+# plt.ylabel('Loss')
+# plt.legend(['train', 'val'])
+# plt.show()
 
 _, accu = spoofnet.evaluate(test_set)
 print('Final Test Acccuracy = {:.3f}'.format(accu*100))
