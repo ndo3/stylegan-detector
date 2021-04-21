@@ -4,6 +4,7 @@ from PIL import Image
 from os import listdir
 from tqdm import tqdm
 import numpy as np
+from tensorflow.keras.utils import to_categorical
 
 from model import create_model
 from preprocess import check_paths, preprocessing
@@ -47,11 +48,9 @@ def load_data(data_type, data_path):
     # added if condition because so far we're only preprocessing train
     train_path = f'{data_path}/{data_type}/preprocess/'
     (reals, fakes) = [load_imgs(train_path + t) for t in ['real', 'fake']]
-    print("reals.shape: ", reals.shape)
-    print("fakes.shape: ", fakes.shape)
     return {
-        'data': np.stack([reals, fakes], axis=0),
-        'labels': np.stack([np.ones((reals.shape[0])), np.zeros((fakes.shape[0]))])
+        'data': np.vstack([reals, fakes]),
+        'labels': to_categorical(np.hstack([np.ones((reals.shape[0])), np.zeros((fakes.shape[0]))]))
     }
 
 def main():
@@ -62,8 +61,8 @@ def main():
     data = {t: load_data(t, args.data_path) for t in ['train', 'valid', 'test']}
     model = create_model(args.truncate_block_num)
     optimizer = tf.keras.optimizers.SGD(learning_rate=0.045, momentum=0.9)
-    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
-    model.fit(data['train']['data'], data['train']['labels'])  # also batch_size and epochs
+    model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
+    model.fit(data['train']['data'], data['train']['labels'], batch_size=32)  # also batch_size and epochs
     print(model.evaluate(data['test']['data'], data['test']['labels']))
 
 
