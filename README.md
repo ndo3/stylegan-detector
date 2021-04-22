@@ -8,7 +8,7 @@ By [Nam Do](https://ndo3.github.io) '21, Julia Windham '21, and Esmeralda Montas
 We sought to reimplemented the Xception model from stractch and train it to classify image data into two classes
 'real' or 'GAN-generated'. Unlike the aforementioned paper, we used this [Dataset of 140,000 Images with a binary label of real/fake](https://www.kaggle.com/xhlulu/140k-real-and-fake-faces) from Kaggle. We also defined a 10GB constraint. Using different points of trunctions we achieve the following results presented in the graph.
 
-       ![image](https://github.com/ndo3/stylegan-detector/blob/main/chart.png?raw=true)
+       ![image](chart.png)
   
                           
 ### Download Data and Formatting
