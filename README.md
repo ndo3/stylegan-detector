@@ -9,7 +9,6 @@ We sought to reimplemented the Xception model from stractch and train it to clas
 'real' or 'GAN-generated'. Unlike the aforementioned paper, we used this [Dataset of 140,000 Images with a binary label of real/fake](https://www.kaggle.com/xhlulu/140k-real-and-fake-faces) from Kaggle. We also defined a 10GB constraint. Using different points of trunctions we achieve the following results presented in the graph.
 
 ![image](chart.png)
-![image](https://user-images.githubusercontent.com/35876074/115785499-890d5280-a38d-11eb-93d1-dc9fd7a15bec.png)
 
   
                           
