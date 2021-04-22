@@ -124,13 +124,14 @@ def create_model(truncate_block_num):
 
     blocks['trunc'] = [
         layers.Flatten(),
-        layers.GlobalAveragePooling2D(),
-        layers.Dense(512, activation='relu'),
-        layers.BatchNormalization(),
-        layers.Dropout(0.3),
+      # layers.GlobalAveragePooling2D(),
+      #  layers.Dense(512, activation='relu'),
+      #  layers.BatchNormalization(),
+      #  layers.Dropout(0.3),
         layers.Dense(2, activation='sigmoid', name='truncated_end_dense')
-    ]
 
+    ]
+    
     x = inputs
     for i in range(truncate_block_num + 1 if is_trunc else 14):
         if i in [0, 13]:

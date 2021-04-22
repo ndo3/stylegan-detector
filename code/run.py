@@ -74,9 +74,9 @@ def main():
         preprocessing(args.data_path, args.percent_of_data)
     data = {t: load_data(t, args.data_path, args.percent_of_data) for t in ['train', 'valid', 'test']}
     model = create_model(args.truncate_block_num)
-    optimizer = tf.keras.optimizers.SGD(learning_rate=0.045, momentum=0.9)
+    optimizer = tf.keras.optimizers.Adam(learning_rate=0.001)
     model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=['accuracy'])
-    model.fit(data['train']['data'], data['train']['labels'], batch_size = hp.BATCH_SIZE)  # also batch_size and epochs
+    model.fit(data['train']['data'], data['train']['labels'], batch_size = hp.BATCH_SIZE, epochs = 4)  # also batch_size and epochs
     print(model.evaluate(data['test']['data'], data['test']['labels']))
 
 
