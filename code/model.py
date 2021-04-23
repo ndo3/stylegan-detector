@@ -2,9 +2,12 @@ import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
 
+
 def make_block_name(num, subnum, is_separable):
-    if is_separable: mid_val = 'sepconv'
-    else: mid_val = 'conv'
+    if is_separable:
+        mid_val = 'sepconv'
+    else:
+        mid_val = 'conv'
     return f'block{num}_{mid_val}{subnum}'
 
 

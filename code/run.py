@@ -42,13 +42,13 @@ def parse_args():
     parser.add_argument(
         '--percent_of_data',
         type=float,
-        default=100,
+        default=5,
         help='Amount of data to use in the model (e.g. 50 yields 25,000 train and 5,000 valid/test for each true/false)'
     )
     parser.add_argument(
         '--img_size',
         type=int,
-        default=299,
+        default=128,
         help='Width and height dimension of each photo to resize to before using the data'
     )
     parser.add_argument(
@@ -67,7 +67,7 @@ def parse_args():
         '--learning_rate',
         type=float,
         default=0.001,
-        help='Number of epochs to train for'
+        help='Learning rate for Adam optimizer'
     )
 
     return parser.parse_args()
@@ -145,7 +145,8 @@ def main():
     model.compile(optimizer=optimizer,
                   loss='binary_crossentropy', metrics=['accuracy'])
     model.fit(data['train']['data'], data['train']['labels'],
-              batch_size=args.batch_size, epochs=args.batch_size)
+              validation_data=(data['valid']['data'], data['valid']['labels']),
+              batch_size=args.batch_size, epochs=args.epochs)
     # print(model.evaluate(data['test']['data'], data['test']['labels']))
 
 
